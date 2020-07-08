@@ -1,21 +1,17 @@
 <?php
 ?>
 @extends('layouts.base_layout')
-@section('title', 'admin')
+@section('title', 'admin posts')
 @section('content')
     <div class="container">
         <table class="table table-light">
             <thead>
             <tr>
                 <th>id</th>
+                <th>image</th>
                 <th>name</th>
                 <th>slug</th>
                 <th>tags</th>
-
-
-
-
-
             </tr>
             </thead>
             <tbody>
@@ -23,6 +19,7 @@
             @foreach($posts as $post)
                 <tr>
                     <th scope="row">{{$post->id}}</th>
+                    <td><img src="{{asset('/storage/app/'.$post->image)}}" alt="" width="150" height="150" ></td>
                     <td>
                         {{$post->name}}
                     </td>

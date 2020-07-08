@@ -14,8 +14,10 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private  $postRepository;
     public function __construct(PostsRepository $postRepository)
     {
+
         $this->postRepository = $postRepository;
     }
 
@@ -52,7 +54,7 @@ class PostsController extends Controller
     public function store(Request $request, Post $post)
     {
 
-      $result =  $post->store($request->except('tags'), $request->only('tags'));
+      $result =  $this->postRepository->storePost($request, $post);
 
         if ($result)
         {
@@ -89,9 +91,14 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $result = $this->postRepository->updatePost($request, $post);
+        if ($result)
+        {
+            return redirect()->route('admin_posts');
+        }
+
     }
 
     /**

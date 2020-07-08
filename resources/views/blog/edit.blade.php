@@ -5,6 +5,7 @@
 @section('content')
     <div class="container">
         <form action="{{route('post.update', [$post->id])}}" method="post">
+            @method('PATCH')
             <div class="form-group">
                 <label for="name">name</label>
                 <input type="text" name="name" class="form-control" required value="{{old('name' , isset($post) ? $post->name : null)}}">
@@ -22,10 +23,10 @@
             <div class="form-group">
                 <label for="tags">tags</label>
                 <select name="tags[]" id="tags" class="custom-select" size="4" multiple="multiple">
-                    <option  selected>choose tags</option>
-                    @foreach($tags as $tag)
+                    <option  >choose tags</option>
+                    @foreach($tags as  $tag)
 
-                        <option value="{{$tag->id}}" >{{$tag->name}}</option>
+                        <option value="{{$tag->id}}"  {{$post->selectedTag($tag->id)}}>{{$tag->name}}</option>
                     @endforeach
 
                 </select>

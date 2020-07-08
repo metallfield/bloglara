@@ -4,7 +4,7 @@
 @section('title', 'create')
 @section('content')
 <div class="container">
-    <form action="{{route('post.store')}}" method="post">
+    <form action="{{route('post.store')}}" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">name</label>
             <input type="text" name="name" class="form-control" required>
@@ -20,12 +20,15 @@
       <div class="form-group">
           <label for="tags">tags</label>
           <select name="tags[]" id="tags" class="custom-select" size="4" multiple="multiple">
-              <option selected>choose tags</option>
+              <option >choose tags</option>
               @foreach($tags as $tag)
                   <option value="{{$tag->id}}">{{$tag->name}}</option>
               @endforeach
           </select>
       </div>
+        <div class="form-group">
+            <input id="image" type="file" class="form-controll-file" name="image" >
+        </div>
 <button type="submit" class="btn btn-outline-info btn-block">create</button>
         @csrf
     </form>

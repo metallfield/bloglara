@@ -8,7 +8,7 @@
     @if(isset($post->tags))
         <span class="font-weight-bold">tags:</span>
 @foreach($post->tags as $tag)
-   <span> {{$tag->name}}</span>
+  <a href="{{route('tag.show', [$tag->id])}}" class="badge badge-info">{{$tag->name}}</a>
 @endforeach
     @endif
     <p>{{$post->content}}</p>

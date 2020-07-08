@@ -3,27 +3,31 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
 
-    protected $fillable = ['name','slug', 'content'];
+    protected $fillable = ['name','slug', 'content', 'image'];
     public function tags()
     {
         return $this->belongsToMany(Tag::class)->withTimestamps();
     }
 
-    public function store($params, $tags)
-    {
-        $fields = $params;
-        $id = Post::create($fields)->id;
-        if (isset($tags))
-            foreach ($tags as $tagName => $tagId) {
-                if ($tagId !== null){
-                    self::find($id)->tags()->attach($tagId);
-                }
-            }
-           return true;
 
-     }
+
+      public function selectedTag($id)
+      {
+          $tagsArr = [];
+          foreach ($this->tags as $tag)
+          {
+              $tagsArr[] = $tag->id;
+          }
+          if (in_array($id, $tagsArr) )
+          {
+              return 'selected';
+          }
+      }
+
 }
