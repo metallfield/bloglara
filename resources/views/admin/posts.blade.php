@@ -19,7 +19,7 @@
             @foreach($posts as $post)
                 <tr>
                     <th scope="row">{{$post->id}}</th>
-                    <td><img src="{{asset('/storage/app/'.$post->image)}}" alt="" width="150" height="150" ></td>
+                    <td><img src="{{Storage::url($post->image)}}" alt="" width="150" height="100" ></td>
                     <td>
                         {{$post->name}}
                     </td>
@@ -48,6 +48,10 @@
         <a class="btn btn-group btn-success" href="{{route('post.create')}}">create</a>
         <div class="w-100 d-flex justify-content-center">
 
+        </div>
+
+        <div class="row my-4 justify-content-center">
+            {{$posts->links()}}
         </div>
     </div>
 

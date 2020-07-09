@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\TagsRepository;
+use App\services\tagsService;
 use App\Tag;
 use Illuminate\Http\Request;
 
 class TagsController extends Controller
 {
 
-    private $tagsRepository;
-    public function __construct(TagsRepository $tagsRepository)
+    private $tagService;
+    public function __construct(tagsService $tagService)
     {
-        $this->tagsRepository = $tagsRepository;
+        $this->tagService = $tagService;
     }
 
     /**
@@ -22,7 +23,7 @@ class TagsController extends Controller
      */
     public function index()
     {
-        $tags = $this->tagsRepository->getTagsForIndex();
+        $tags = $this->tagService->getTagsForIndex();
       return   view('blog.tags.index', compact('tags'));
     }
 
@@ -44,7 +45,7 @@ class TagsController extends Controller
      */
     public function store(Request $request)
     {
-        $result = Tag::create($request->all());
+        $result = $this->tagService->createTag($request->all());
         if ($result)
         {
             return redirect()->route('admin_tags');
@@ -84,7 +85,7 @@ class TagsController extends Controller
      */
     public function update(Request $request, Tag $tag)
     {
-        $result = $tag->update($request->all());
+        $result = $this->tagService->updateTag($request->all(), $tag);
         if ($result)
         {
             return redirect()->route('admin_tags');

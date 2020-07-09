@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\services\postService;
 use Illuminate\Http\Request;
 use App\Repositories\PostsRepository;
 use Illuminate\Routing\Route;
+use phpDocumentor\Reflection\Types\Collection;
 
 class PostsController extends Controller
 {
@@ -14,23 +16,22 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    private  $postRepository;
-    public function __construct(PostsRepository $postRepository)
+    private  $postService;
+    public function __construct(postService $postService)
     {
-
-        $this->postRepository = $postRepository;
+        $this->postService = $postService;
     }
 
     public function index()
     {
 
-        $posts = $this->postRepository->getAllPosts();
+        $posts = $this->postService->getAllPosts();
         return view('blog.index', compact('posts'));
     }
 
     public function show($id)
     {
-        $post = $this->postRepository->getPostById($id);
+        $post = $this->postService->getPostById($id);
         return view('blog.show', compact('post'));
     }
 
@@ -41,7 +42,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        $tags = $this->postRepository->getTagsForSelect();
+        $tags = $this->postService->getTagsForSelect();
         return view('blog.create', compact('tags'));
     }
 
@@ -53,9 +54,8 @@ class PostsController extends Controller
      */
     public function store(Request $request, Post $post)
     {
-
-      $result =  $this->postRepository->storePost($request, $post);
-
+        $data = collect($request->all());
+        $result =  $this->postService->createPost($data,  $post);
         if ($result)
         {
             return redirect()->route('admin_posts');
@@ -79,8 +79,8 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        $post = $this->postRepository->getPostById($id);
-        $tags = $this->postRepository->getTagsForSelect();
+        $post = $this->postService->getPostById($id);
+        $tags = $this->postService->getTagsForSelect();
         return view('blog.edit', compact('post', 'tags'));
     }
 
@@ -93,7 +93,8 @@ class PostsController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $result = $this->postRepository->updatePost($request, $post);
+        $data = collect($request->all());
+        $result = $this->postService->updatePost($data, $post);
         if ($result)
         {
             return redirect()->route('admin_posts');

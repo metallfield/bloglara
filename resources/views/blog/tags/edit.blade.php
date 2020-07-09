@@ -11,11 +11,7 @@
                 <label for="name">name</label>
                 <input type="text" name="name" class="form-control" required value="{{old('name', isset($tag)? $tag->name : null)}}">
             </div>
-            <div class="form-group">
-                <label for="slug">slug</label>
-                <input type="text" name="slug" class="form-control" required value="{{old('name', isset($tag)? $tag->slug : null)}}">
-            </div>
-            <button type="submit" class="btn btn-outline-info btn-block">create</button>
+               <button type="submit" class="btn btn-outline-info btn-block">create</button>
             @csrf
         </form>
     </div>

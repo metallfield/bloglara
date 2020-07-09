@@ -4,16 +4,13 @@
 @section('title', 'edit '.$post->name)
 @section('content')
     <div class="container">
-        <form action="{{route('post.update', [$post->id])}}" method="post">
+        <form action="{{route('post.update', [$post->id])}}" method="post" enctype="multipart/form-data">
             @method('PATCH')
             <div class="form-group">
                 <label for="name">name</label>
                 <input type="text" name="name" class="form-control" required value="{{old('name' , isset($post) ? $post->name : null)}}">
             </div>
-            <div class="form-group">
-                <label for="slug">slug</label>
-                <input type="text" name="slug" class="form-control" required value="{{old('name' , isset($post) ? $post->slug : null)}}">
-            </div>
+
             <div class="form-group">
                 <label for="content">content</label>
                 <textarea name="content" id="content" cols="30" rows="10" class="form-control">
@@ -22,14 +19,10 @@
             </div>
             <div class="form-group">
                 <label for="tags">tags</label>
-                <select name="tags[]" id="tags" class="custom-select" size="4" multiple="multiple">
-                    <option  >choose tags</option>
-                    @foreach($tags as  $tag)
-
-                        <option value="{{$tag->id}}"  {{$post->selectedTag($tag->id)}}>{{$tag->name}}</option>
-                    @endforeach
-
-                </select>
+                <input type="text" name="tags" value="@foreach($post->tags as $tag) {{$tag->name}}, @if ($loop->last)  @endif @endforeach">
+            </div>
+            <div class="form-group">
+                <input id="image" type="file" class="form-controll-file" name="image" >
             </div>
             <button type="submit" class="btn btn-outline-info btn-block">create</button>
             @csrf

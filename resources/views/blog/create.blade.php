@@ -9,22 +9,13 @@
             <label for="name">name</label>
             <input type="text" name="name" class="form-control" required>
         </div>
-        <div class="form-group">
-            <label for="slug">slug</label>
-            <input type="text" name="slug" class="form-control" required>
-        </div>
      <div class="form-group">
          <label for="content">content</label>
          <textarea name="content" id="content" cols="30" rows="10" class="form-control"></textarea>
      </div>
       <div class="form-group">
           <label for="tags">tags</label>
-          <select name="tags[]" id="tags" class="custom-select" size="4" multiple="multiple">
-              <option >choose tags</option>
-              @foreach($tags as $tag)
-                  <option value="{{$tag->id}}">{{$tag->name}}</option>
-              @endforeach
-          </select>
+          <input type="text" name="tags" >
       </div>
         <div class="form-group">
             <input id="image" type="file" class="form-controll-file" name="image" >
