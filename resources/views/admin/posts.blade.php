@@ -12,6 +12,7 @@
                 <th>name</th>
                 <th>slug</th>
                 <th>tags</th>
+                <th>author</th>
             </tr>
             </thead>
             <tbody>
@@ -31,6 +32,9 @@
                             {{$tag->name}},
 
                         @endforeach
+                    </td>
+                    <td>
+                        <span>{{$post->user['name']}}</span>
                     </td>
                     <td>
                         <form action="{{route('post.destroy', $post)}}" method="POST"><a href="{{route('post.show', [$post])}}" class="btn btn-outline-success">show</a>

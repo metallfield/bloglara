@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\CheckAuthor;
+use App\Http\Requests\PostRequest;
 use App\Post;
 use App\services\postService;
 use Illuminate\Http\Request;
@@ -24,7 +26,6 @@ class PostsController extends Controller
 
     public function index()
     {
-
         $posts = $this->postService->getAllPosts();
         return view('blog.index', compact('posts'));
     }
@@ -52,7 +53,7 @@ class PostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Post $post)
+    public function store(PostRequest $request, Post $post)
     {
         $data = collect($request->all());
         $result =  $this->postService->createPost($data,  $post);
@@ -80,8 +81,14 @@ class PostsController extends Controller
     public function edit($id)
     {
         $post = $this->postService->getPostById($id);
-        $tags = $this->postService->getTagsForSelect();
-        return view('blog.edit', compact('post', 'tags'));
+        if ($this->postService->CheckAuthor($post->user_id))
+        {
+            return view('blog.edit', compact('post'));
+        }else{
+            session()->flash('warning', "wrong permission");
+            return  redirect()->route('admin_posts');
+        }
+
     }
 
     /**
@@ -91,7 +98,7 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
         $data = collect($request->all());
         $result = $this->postService->updatePost($data, $post);
@@ -99,7 +106,6 @@ class PostsController extends Controller
         {
             return redirect()->route('admin_posts');
         }
-
     }
 
     /**
@@ -110,10 +116,14 @@ class PostsController extends Controller
      */
     public function destroy(Post $post)
     {
-       if ($post->delete())
-       {
-           return redirect()->route('admin_posts');
-       }
+        if ($this->postService->CheckAuthor($post->user_id))
+        {
+            if ($post->delete())
+            {
+                return redirect()->route('admin_posts');
+            }
+        }
+       return  back();
 
     }
 }

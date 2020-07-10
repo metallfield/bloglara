@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TagRequest;
 use App\Repositories\TagsRepository;
 use App\services\tagsService;
 use App\Tag;
@@ -43,7 +44,7 @@ class TagsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TagRequest $request)
     {
         $result = $this->tagService->createTag($request->all());
         if ($result)
@@ -83,7 +84,7 @@ class TagsController extends Controller
      * @param  \App\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    public function update(TagRequest $request, Tag $tag)
     {
         $result = $this->tagService->updateTag($request->all(), $tag);
         if ($result)

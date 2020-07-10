@@ -6,7 +6,9 @@ namespace App\Repositories;
 
 use App\Post;
 use App\Tag;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -14,9 +16,13 @@ class PostsRepository
 {
 
 
-    public function getAllPosts()
+    public function getAllPosts(?User $user = null)
     {
-        return Post::with('tags')->orderBy('updated_at', 'desc')->paginate(6);
+        $query = Post::with('tags', 'user')->orderBy('updated_at', 'desc');
+        if($user !== null) {
+            $query->where('user_id', $user->id);
+        }
+        return $query->paginate(6);
     }
 
     public function getPostById($id)
@@ -31,6 +37,7 @@ class PostsRepository
 
     public function storePost($fields, Post $post)
     {
+
 
        $id = $post->create($fields)->id;
        if ($id)

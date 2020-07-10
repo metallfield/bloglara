@@ -11,7 +11,10 @@
                 <label for="name">name</label>
                 <input type="text" name="name" class="form-control" required value="{{old('name', isset($tag)? $tag->name : null)}}">
             </div>
-               <button type="submit" class="btn btn-outline-info btn-block">create</button>
+            @error('name')
+            <p class="alert alert-warning">{{$message}}</p>
+            @enderror
+               <button type="submit" class="btn btn-outline-info btn-block">update</button>
             @csrf
         </form>
     </div>

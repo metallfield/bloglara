@@ -9,6 +9,7 @@
         @foreach($posts as $post)
         <div class="col border rounded p-4 m-2">
             <h3><a href="{{route('post.show', [$post->id])}}">{{$post->name}}</a></h3>
+            <span class="font-weight-bold">author :</span><a href="{{route('user.show', [$post->user->id])}}">{{$post->user->name}} </a>
             <img src="{{Storage::url($post->image)}}" alt="" height="150" class="w-100">
             <p>{{$post->content}}</p>
         </div>
