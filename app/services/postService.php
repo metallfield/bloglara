@@ -40,12 +40,17 @@ class postService
             if (isset($imageName)) {
                 $data->get('image')->move(storage_path() . '/app/public/images', $imageName);
             }
-            $tags = $data->only('tags');
-            if (isset($tags))
-                $tags = explode(',', $tags['tags']);
-            foreach ($tags as $tag) {
-                    $this->postRepository->attachTag($id, $tag);
+            $tags = $data->only('tag');
+            if (isset($tags['tag']))
+            {
+                $tags = $tags['tag'];
+                foreach ($tags as $tag) {
+                    if ($tag != '') {
+                        $this->postRepository->attachTag($id, $tag);
+                    }
                 }
+            }
+
 
         }
 
@@ -75,14 +80,16 @@ class postService
         {
             $data->get('image')->move(storage_path() . '/app/public/images', $imageName);
         }
-        $tags = $data->only('tags');
-        if (isset($tags))
+        $tags = $data->only('tag');
+        if (isset($tags['tag']))
         {
+
             $post->tags()->detach();
-            $tags = preg_split('/[,\s]+/', $tags['tags'], -1, PREG_SPLIT_NO_EMPTY);
+            $tags = $tags['tag'];
 
             foreach ($tags as $tag)
             {
+
                 if ($tag != '') {
 
                     $this->postRepository->attachTag($post->id, $tag);

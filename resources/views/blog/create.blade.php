@@ -7,7 +7,7 @@
     <form action="{{route('post.store')}}" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">name</label>
-            <input type="text" name="name" class="form-control" >
+            <input type="text" name="name" id="name" class="form-control" >
         </div>
         @error('name')
         <p class="alert alert-warning">{{$message}}</p>
@@ -21,14 +21,13 @@
         @enderror
         <div class="ui-widget">
             <label for="tags">Tags </label>
-            <input id="tags" size="50">
+            <input  name="tags" id="tags" size="50">
+            <button type="button" id="addTag" class="btn-outline-primary">add tag</button>
         </div>
+        <ul id="tagsList"></ul>
       <div class="form-group">
-           <select name="tags[]" id="tag" multiple="multiple" class="form-control" >
-              @foreach($tags as $tag)
-              <option >{{$tag->name}}</option>
-                  @endforeach
-          </select>
+           <select name="tag[]" id="tag" multiple="multiple" class="form-control" >
+              </select>
       </div>
         @error('tags')
         <p class="alert alert-warning">{{$message}}</p>

@@ -32,7 +32,7 @@ class PostsRepository
 
     public function getTagsForSelect()
     {
-        return Tag::select('id', 'name')->get();
+        return Tag::select('id', 'name')->orderBy('name')->get();
     }
 
     public function storePost($fields, Post $post)

@@ -55,7 +55,7 @@ class PostsController extends Controller
      */
     public function store(PostRequest $request, Post $post)
     {
-        $data = collect($request->all());
+         $data = collect($request->all());
         $result =  $this->postService->createPost($data,  $post);
         if ($result)
         {
@@ -80,10 +80,11 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
+        $tags = $this->postService->getTagsForSelect();
         $post = $this->postService->getPostById($id);
         if ($this->postService->CheckAuthor($post->user_id))
         {
-            return view('blog.edit', compact('post'));
+            return view('blog.edit', compact('post', 'tags'));
         }else{
             session()->flash('warning', "wrong permission");
             return  redirect()->route('admin_posts');

@@ -8,7 +8,7 @@
             @method('PATCH')
             <div class="form-group">
                 <label for="name">name</label>
-                <input type="text" name="name" class="form-control" value="{{old('name' , isset($post) ? $post->name : null)}}">
+                <input type="text" name="name" id="name" class="form-control" value="{{old('name' , isset($post) ? $post->name : null)}}">
             </div>
             @error('name')
             <p class="alert alert-warning">{{$message}}</p>
@@ -22,13 +22,23 @@
             @error('content')
             <p class="alert alert-warning">{{$message}}</p>
             @enderror
-            <div class="form-group">
+            <div class="ui-widget">
                 <label for="tags">tags</label>
-                <input type="text" name="tags" value="@foreach($post->tags as $tag) {{$tag->name}}, @if ($loop->last)  @endif @endforeach">
+                <input type="text" name="tags" id="tags" >
+                <button type="button" id="addTag" class="btn-outline-primary">add tag</button>
             </div>
+
             @error('tags')
             <p class="alert alert-warning">{{$message}}</p>
             @enderror
+            <div class="form-group">
+                <select name="tag[]" id="tag" multiple="multiple" class="form-control" >
+                    @foreach($post->tags as $tag)
+                        <option value="{{$tag->name}}" selected>{{$tag->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <ul id="tagsList"></ul>
             <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="customSwitch1">
                 <label class="custom-control-label" for="customSwitch1">has image</label>
@@ -36,13 +46,7 @@
             <div class="form-group image">
                 <input id="image" type="file" class="form-controll-file" name="image" >
             </div>
-            <script>
-               var img = $('#customSwitch1').prop('checked');
-                    if(img === false)
-                    {
-                        $('div.image').html(  '<input id="image" type="file" class="form-controll-file" name="image" >')
-                    }
-            </script>
+
             @error('image')
             <p class="alert alert-warning">{{$message}}</p>
             @enderror
