@@ -71,12 +71,13 @@
 @yield('content')
 
 <script src="{{ mix('js/app.js') }}"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script src="{{asset('js/tagsEdit.js')}}">
 </script>
 <script src="{{asset('js/hasImage.js')}}"></script>
 
 <script src="{{asset('js/validatePost.js')}}"></script>
-
+<script src="{{asset('js/fetch_user.js')}}"></script>
 </body>
 </html>

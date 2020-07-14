@@ -14,8 +14,8 @@ class AlterPostsTable extends Migration
     public function up()
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->Integer('user_id')->index();
-            $table->foreign('user_id')->references('id')->on('users');
+     //  $table->Integer('user_id')->unsigned()->index();
+      // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -28,7 +28,6 @@ class AlterPostsTable extends Migration
     {
         Schema::table('posts', function (Blueprint $table) {
            $table->dropColumn('user_id');
-           $table->dropForeign('user_id');
         });
     }
 }
