@@ -11,7 +11,6 @@ class MessageRepository
 {
     public function insertMessage($data)
     {
-
         return Chat_message::create($data);
     }
 
@@ -19,7 +18,7 @@ class MessageRepository
     {
         return Chat_message::where([['from_user_id', $from_user_id],['to_user_id',$to_user_id]])
             ->orWhere([['from_user_id', $to_user_id], ['to_user_id', $from_user_id]])
-            ->orderBy('timestamp', 'desc');
+            ->get();
     }
     public function messageUpdate($from_user_id, $to_user_id)
     {
@@ -29,6 +28,6 @@ class MessageRepository
 
     public function  getUsername($user_id)
     {
-        return User::select('name')->where('id', $user_id)->get();
+        return User::select('name')->find($user_id);
     }
 }

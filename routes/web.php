@@ -26,7 +26,9 @@ Route::get('/users', 'UserController@index')->name('users');
 Route::get('/user/{user}', 'UserController@show')->name('user.show');
 
 Route::domain('chat-blog')->namespace('Chat')->group(function () {
-    Route::get('/chat', 'ChatController@index');
+    Route::get('/chat', 'ChatController@index')->name('chat');
     Route::get('/checkIsOnline', 'ChatController@checkIsOnline');
     Route::post('/insertMessage', 'ChatController@insertMessage');
+    Route::post('/fetch_history' , 'ChatController@fetch_history');
+
 });
