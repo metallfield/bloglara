@@ -83,6 +83,8 @@
 <script src="{{asset('js/hasImage.js')}}"></script>
 
 <script src="{{asset('js/validatePost.js')}}"></script>
+<script src="{{asset('js/chat.js')}}"></script>
 <script src="{{asset('js/fetch_user.js')}}"></script>
+
 </body>
 </html>

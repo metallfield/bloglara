@@ -1,11 +1,15 @@
 $(document).ready(function() {
+
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('b7a251164dc429135185', {
+        cluster: 'eu'
+    });
+
+    let channel = pusher.subscribe('chatbox');
+
     fetch_user();
 
-    setInterval(function () {
-
-        fetch_user();
-        update_chat_history_data();
-    }, 5000);
 
     function fetch_user() {
         let html = '';
@@ -46,24 +50,30 @@ $(document).ready(function() {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
     $(document).on('click', '.send_chat', function() {
         let to_user_id = $(this).attr('id');
         let chat_message = $('#chat_message_' + to_user_id).val();
-        $.post("/insertMessage",
-            {to_user_id:to_user_id, chat_message:chat_message},
+        $.post("/sendMessage",
+            { message:chat_message},
             (data) => {
                 console.log(data);
                 $('#chat_message_'+to_user_id).val('');
-                let html = $('#messageTmpl').tmpl(data);
-                $('#chat_history_'+to_user_id).html(html);
+
             })
+    });
+    channel.bind('MessageSend', function(data) {
+        let to_user_id = $('.send_chat').attr('id');
+        alert(to_user_id)
+        alert(JSON.stringify(data));
+        let html = $('#messageTmpl').tmpl(data);
+        $('#chat_history_'+to_user_id).html(html);
     });
 
     function fetch_user_chat_history(to_user_id)
     {
-        $.post("/fetch_history",
-            {to_user_id:to_user_id},
-            (data) => {
+        $.get("/fetchMessages")
+            .done( (data) => {
                 console.log(data);
                 let html = $('#messageTmpl').tmpl(data);
                 $('#chat_history_'+to_user_id).html(html);

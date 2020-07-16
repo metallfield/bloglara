@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Chat;
 
 
+use App\Events\MessageSend;
 use App\Repositories\MessageRepository;
 use App\Repositories\UserRepository;
 use App\services\MessageService;
@@ -59,7 +60,7 @@ class ChatController extends  BaseController
         $data['message'] = $request->chat_message;
         $data['status'] = 1;
         $this->messageService->insertMessage($data);
-        $result = $this->messageService->fetch_user_chat_history($data['from_user_id'], $data['to_user_id']);
+         $result = $this->messageService->fetch_user_chat_history($data['from_user_id'], $data['to_user_id']);
         if ($result)
         {
             return response()->json($result);

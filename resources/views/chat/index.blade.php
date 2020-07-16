@@ -6,7 +6,7 @@
 
     <div class="table-responsive">
         <h4 align="center">Online User</h4>
-        <p align="right">Hi - {{$user->name}}-</p>
+        <p align="right">Hi -   -</p>
         <div id="user_details"></div>
     </div>
     <div class="container" id="user_status"></div>
@@ -15,10 +15,9 @@
     </script>
     <div id="user_model_details"></div>
 
-
     <script id="messageTmpl" type="text/x-jquery-tmpl"> <ul class="list-unstyled">
    <b class="text-success">${username}</b>
-        <li style="border-bottom:1px dotted #ccc"><p> - ${message}
+        <li style="border-bottom:1px dotted #ccc"><p> -${message.message}
                 <div align="right">
                  - <small><em> ${updated_at} </em></small>
                </div>
