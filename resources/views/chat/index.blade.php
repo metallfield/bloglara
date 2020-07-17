@@ -4,9 +4,11 @@
 @section('title', 'chat')
 @section('content')
 
+    <div class="container">
     <div class="table-responsive">
         <h4 align="center">Online User</h4>
-        <p align="right">Hi -   -</p>
+        <p align="right">Hi - {{$user->name}} -</p>
+        <span class="currentUser" id="{{$user->id}}" hidden></span>
         <div id="user_details"></div>
     </div>
     <div class="container" id="user_status"></div>
@@ -17,11 +19,11 @@
 
     <script id="messageTmpl" type="text/x-jquery-tmpl"> <ul class="list-unstyled">
    <b class="text-success">${username}</b>
-        <li style="border-bottom:1px dotted #ccc"><p> -${message.message}
+        <li style="border-bottom:1px dotted #ccc"><p> -${message}
                 <div align="right">
                  - <small><em> ${updated_at} </em></small>
                </div>
             </p>
             </li></ul>
-</script>
+</script></div>
 @endsection

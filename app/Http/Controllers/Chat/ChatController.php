@@ -4,10 +4,13 @@
 namespace App\Http\Controllers\Chat;
 
 
+use App\Events\CheckIsOnline;
 use App\Events\MessageSend;
 use App\Repositories\MessageRepository;
 use App\Repositories\UserRepository;
 use App\services\MessageService;
+use App\User;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -48,8 +51,13 @@ class ChatController extends  BaseController
                     $user['status']  = 'offline';
                 }
                 $output[] = $user;
+                $us = User::where('id',  $user['user_id'] )->first();
+                broadcast(new CheckIsOnline($us, $user['status']));
             }
+
         }
+
+
         return response()->json($output);
     }
 

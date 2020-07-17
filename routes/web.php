@@ -27,11 +27,11 @@ Route::get('/user/{user}', 'UserController@show')->name('user.show');
 
 Route::domain('chat-blog')->namespace('Chat')->group(function () {
 Route::get('/chat', 'ChatController@index')->name('chat');
-    Route::get('/checkIsOnline', 'ChatController@checkIsOnline');
+    Route::get('/getUsers', 'ChatsController@getUsers');
     Route::post('/insertMessage', 'ChatController@insertMessage');
     Route::post('/fetch_history' , 'ChatController@fetch_history');
     Route::get('/chats', 'ChatsController@index');
-    Route::get('fetchMessages', 'ChatsController@fetchMessages');
-    Route::post('sendMessage', 'ChatsController@sendMessage');
-
+    Route::post('/fetchMessages', 'ChatsController@fetchMessages');
+    Route::post('/sendMessage', 'ChatsController@sendMessage');
+    Route::post('/pusherAuth', 'ChatsController@pusherAuth');
 });

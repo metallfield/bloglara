@@ -77,6 +77,7 @@
 <script src="{{ mix('js/app.js') }}"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js" ></script>
  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://js.pusher.com/6.0/pusher.min.js"></script>
 
 <script src="{{asset('js/tagsEdit.js')}}">
 </script>

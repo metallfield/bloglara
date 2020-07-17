@@ -1,19 +1,33 @@
 $(document).ready(function() {
 
     Pusher.logToConsole = true;
-
-    var pusher = new Pusher('b7a251164dc429135185', {
-        cluster: 'eu'
+    const pusher = new Pusher('b7a251164dc429135185', {
+        cluster: 'eu',
+        encrypted: true,
+        authEndpoint: '/pusherAuth',
+        auth: {
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        }
     });
-
-    let channel = pusher.subscribe('chatbox');
-
+    let id = $('.currentUser').attr('id');
+    let channel = pusher.subscribe('private-chatbox_'+id);
+    channel.bind('MessageSend', function(data) {
+        let to_user_id = $('.send_chat').attr('id');
+        console.log(JSON.stringify(data));
+        data.message = data.message.message;
+        data.username = data.user.name;
+        let today = new Date;
+        data.updated_at = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() + ' '+ today.getHours()+ ':'+ today.getMinutes()+ ':' + today.getSeconds();
+        $('#messageTmpl').tmpl(data).appendTo('#chat_history_'+to_user_id);
+        $('#chat_history_'+to_user_id).scrollTop($('#chat_history_'+to_user_id)[0].scrollHeight);
+    });
     fetch_user();
-
 
     function fetch_user() {
         let html = '';
-        $.get("/checkIsOnline")
+        $.get("/getUsers")
             .done((data) => {
                 console.log(data);
                 $('#user_model_details').empty();
@@ -35,7 +49,7 @@ $(document).ready(function() {
     }
 
     $(document).on('click', '.start_chat', function(){
-        let to_user_id = $(this).data('touserid');
+        var to_user_id = $(this).data('touserid');
         let to_user_name = $(this).data('tousername');
         make_chat_dialog_box(to_user_id, to_user_name);
         $("#user_dialog_"+to_user_id).dialog({
@@ -43,6 +57,18 @@ $(document).ready(function() {
             width:400
         });
         $('#user_dialog_'+to_user_id).dialog('open');
+
+        let channel = pusher.subscribe('private-chatbox_'+to_user_id);
+        channel.bind('MessageSend', function(data) {
+            let to_user_id = $('.send_chat').attr('id');
+            console.log(JSON.stringify(data));
+            data.message = data.message.message;
+            data.username = data.user.name;
+            let today = new Date;
+            data.updated_at = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() + ' '+ today.getHours()+ ':'+ today.getMinutes()+ ':' + today.getSeconds();
+            $('#messageTmpl').tmpl(data).appendTo('#chat_history_'+to_user_id);
+            $('#chat_history_'+to_user_id).scrollTop($('#chat_history_'+to_user_id)[0].scrollHeight);
+        });
     });
 
     $.ajaxSetup({
@@ -55,37 +81,22 @@ $(document).ready(function() {
         let to_user_id = $(this).attr('id');
         let chat_message = $('#chat_message_' + to_user_id).val();
         $.post("/sendMessage",
-            { message:chat_message},
+            {to_user_id:to_user_id,  message:chat_message},
             (data) => {
                 console.log(data);
                 $('#chat_message_'+to_user_id).val('');
-
             })
-    });
-    channel.bind('MessageSend', function(data) {
-        let to_user_id = $('.send_chat').attr('id');
-        alert(to_user_id)
-        alert(JSON.stringify(data));
-        let html = $('#messageTmpl').tmpl(data);
-        $('#chat_history_'+to_user_id).html(html);
     });
 
     function fetch_user_chat_history(to_user_id)
     {
-        $.get("/fetchMessages")
-            .done( (data) => {
+        $.post("/fetchMessages",
+            {to_user_id:to_user_id},
+            (data) => {
                 console.log(data);
                 let html = $('#messageTmpl').tmpl(data);
-                $('#chat_history_'+to_user_id).html(html);
+                $('#chat_history_'+to_user_id).html(html).scrollTop($('#chat_history_'+to_user_id)[0].scrollHeight);
             });
-    }
-
-    function update_chat_history_data()
-    {
-        $('.chat_history').each(function(){
-            let to_user_id = $(this).data('touserid');
-            fetch_user_chat_history(to_user_id);
-        });
     }
 
     $(document).on('click', '.ui-button-icon', function(){
