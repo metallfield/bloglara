@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Chat;
 
 
-use App\Chat_message;
+use App\Channel;
+use App\Message;
 use App\Events\CheckIsOnline;
 use App\Events\MessageSend;
 use App\Http\Controllers\Controller;
-use App\Message;
 use App\Repositories\UserRepository;
 use App\services\MessageService;
 use App\User;
@@ -55,25 +55,47 @@ class ChatsController extends Controller
     }
 
 
+    public function getChannel(Request $request)
+    {
+        $data['user_id'] = Auth::id();
+        $data['to_user_id'] = $request->to_user_id;
+        $channels = auth()->user()->channels->all();
+        foreach ($channels as   $channel)
+        {
+            if ($channel->users->contains($data['to_user_id']))
+            {
+                $ch= $channel;
+            }
+        }
+        if (empty($ch))
+        {
+            $channel = auth()->user()->channels()->create();
+            $channel->users()->attach($data['to_user_id']);
+            $ch= $channel;
+        }
+        $output['channel'] = $ch;
+        return response()->json($output);
+    }
 
     public function fetchMessages(Request $request)
     {
-        $data['from_user_id'] = session('user')['id'];
+        $data['user_id'] = Auth::id();
         $data['to_user_id'] = $request->to_user_id;
-        $result = $this->messageService->fetch_user_chat_history($data['from_user_id'], $data['to_user_id']);
+        $channel = Channel::where('id', $request->channel_id)->first();
+        $result = $channel->messages;
+
         return response()->json($result);
     }
 
     public function sendMessage(Request $request)
     {
-        $data['to_user_id'] = $request->to_user_id;
-        $data['from_user_id'] = Auth::id();
-        $data['message'] = $request->message;
+         $data['message'] = $request->message;
         $data['status'] = 1;
-        $id =  Chat_message::create($data)->id;
-        $message = Chat_message::where('id',$id)->first();
-        $user = User::where('id', $data['from_user_id'])->first();
-        broadcast(new MessageSend($user, $message, $data['to_user_id']));
+        $data['channel_id'] = $request->channel_id;
+           $user = Auth::user();
+        $message  =  auth()->user()->messages()->create($data);
+
+        broadcast(new MessageSend($user,$message, $message->channel_id))->toOthers();
 
     }
 

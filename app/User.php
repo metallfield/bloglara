@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use MongoDB\BSON\Timestamp;
 
 class User extends Authenticatable
 {
@@ -41,13 +42,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
-    public function Chat_messages()
-    {
-        return $this->hasMany(Chat_message::class);
-    }
-
     public function messages()
     {
         return $this->hasMany(Message::class);
     }
+
+    public function channels()
+    {
+        return $this->belongsToMany(Channel::class)->withTimestamps();
+    }
+
 }

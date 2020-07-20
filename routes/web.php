@@ -34,4 +34,5 @@ Route::get('/chat', 'ChatController@index')->name('chat');
     Route::post('/fetchMessages', 'ChatsController@fetchMessages');
     Route::post('/sendMessage', 'ChatsController@sendMessage');
     Route::post('/pusherAuth', 'ChatsController@pusherAuth');
+    Route::post('/getChannel', 'ChatsController@getChannel');
 });

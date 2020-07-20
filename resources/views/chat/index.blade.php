@@ -17,7 +17,7 @@
     </script>
     <div id="user_model_details"></div>
 
-    <script id="messageTmpl" type="text/x-jquery-tmpl"> <ul class="list-unstyled">
+    <script id="messageTmpl" type="text/x-jquery-tmpl" > <ul class="list-unstyled" id="ul" >
    <b class="text-success">${username}</b>
         <li style="border-bottom:1px dotted #ccc"><p> -${message}
                 <div align="right">

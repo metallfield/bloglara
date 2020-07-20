@@ -2,9 +2,8 @@
 
 namespace App\Events;
 
-use App\Chat_message;
 use App\Message;
-use App\User;
+ use App\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -23,21 +22,23 @@ class MessageSend implements ShouldBroadcast
      */
     public $message;
     public  $user;
-    public $to_user_id;
+    public $channel;
 
     /**
      * Create a new event instance.
      *
      * @param User $user
-     * @param Chat_message $message
-     * @param $to_user_id
+     * @param Message $message
+     * @param $channel
      */
-    public function __construct(User $user, Chat_message $message, $to_user_id)
+    public function __construct(User $user ,Message $message, $channel )
     {
         $this->user = $user;
         $this->message = $message;
-        $this->to_user_id = $to_user_id;
-    }
+        $this->channel = $channel;
+        $this->dontBroadcastToCurrentUser();
+
+     }
 
     /**
      * Get the channels the event should broadcast on.
@@ -46,7 +47,7 @@ class MessageSend implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('chatbox_'.$this->to_user_id);
+        return new PrivateChannel('chatbox_'.$this->channel);
     }
 
     public function broadcastAs()
